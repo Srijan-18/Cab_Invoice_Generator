@@ -14,7 +14,7 @@ public class InvoiceGenerator {
      * @param time
      * @return fare
      */
-    public double getFare(double distance, int time) {
+    private double getFare(double distance, int time) {
         double fare = distance * FARE_PER_KILOMETER + time * FARE_PER_MINUTE;
         return Math.max(MINIMUM_FARE, fare);
     }
