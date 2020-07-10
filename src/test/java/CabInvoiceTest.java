@@ -1,3 +1,4 @@
+import com.bridgelabz.model.Ride;
 import com.bridgelabz.service.InvoiceGenerator;
 import org.junit.Assert;
 import org.junit.Before;
@@ -23,5 +24,12 @@ public class CabInvoiceTest {
     @Test
     public void givenLessDistanceAndTime_ShouldReturnMinimumFare() {
         Assert.assertEquals(5, invoiceGenerator.getFare(0.1, 1), 0.0);
+    }
+
+    @Test
+    public void givenMultipleRides_ShouldReturnTotalFare() {
+        Ride[] rides = { new Ride(2.0, 1),
+                         new Ride(0.1, 1)};
+        Assert.assertEquals(26, invoiceGenerator.getTotalFare(rides), 0.0);
     }
 }
