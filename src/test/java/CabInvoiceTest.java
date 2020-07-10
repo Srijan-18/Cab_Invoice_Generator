@@ -18,12 +18,13 @@ public class CabInvoiceTest {
         InvoiceGenerator invoiceGenerator = new InvoiceGenerator();
         double distance = 2.0;
         int time = 1;
-        Assert.assertEquals(21, invoiceGenerator.getFare(distance, time), 0.0);
+        Assert.assertEquals(21, invoiceGenerator.getTotalFare(new Ride(distance, time)), 0.0);
     }
 
     @Test
     public void givenLessDistanceAndTime_ShouldReturnMinimumFare() {
-        Assert.assertEquals(5, invoiceGenerator.getFare(0.1, 1), 0.0);
+        Assert.assertEquals(5, invoiceGenerator.getTotalFare(new Ride(0.1, 1)),
+                            0.0);
     }
 
     @Test
