@@ -1,6 +1,6 @@
 package com.bridgelabz.model;
 
-import utility.RideCategory;
+import com.bridgelabz.utility.RideCategory;
 
 public class Ride {
 

@@ -1,7 +1,9 @@
 package com.bridgelabz.service;
 
 import com.bridgelabz.model.Ride;
-import utility.RideCategory;
+import com.bridgelabz.utility.RideCategory;
+
+import java.util.Arrays;
 
 public class FareCalculator {
 
@@ -24,10 +26,8 @@ public class FareCalculator {
      * @return total fare
      */
     public double getTotalFare(Ride... rides) {
-            double totalFare = 0.0;
-            for (Ride ride:rides) {
-            totalFare += this.getFare(ride.distance, ride.time, ride.rideCategory);
-            }
-            return totalFare;
+            double totalFare = Arrays.stream(rides).mapToDouble(ride -> this.getFare
+                                                                (ride.distance, ride.time, ride.rideCategory)).sum();
+        return totalFare;
     }
 }

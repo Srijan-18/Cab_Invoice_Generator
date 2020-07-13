@@ -1,4 +1,4 @@
-package utility;
+package com.bridgelabz.utility;
 
 public enum RideCategory {
     PREMIUM (15, 2, 20),

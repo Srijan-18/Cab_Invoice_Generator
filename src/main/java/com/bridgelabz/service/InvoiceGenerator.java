@@ -1,5 +1,6 @@
 package com.bridgelabz.service;
 
+import com.bridgelabz.exception.CabInvoiceGeneratorException;
 import com.bridgelabz.model.InvoiceSummary;
 import com.bridgelabz.model.Ride;
 
@@ -38,7 +39,11 @@ public class InvoiceGenerator {
      * @param userID
      * @param userRides
      */
-    public void setUserSpecificInvoice(String userID, Ride... userRides) {
+    public void setUserSpecificInvoice(String userID, Ride... userRides) throws CabInvoiceGeneratorException {
+        if ((invoiceSummaryMap.containsKey(userID))){
+            throw new CabInvoiceGeneratorException(CabInvoiceGeneratorException.ExceptionType.KEY_ALREADY_EXISTS,
+                                                    "UserID already exists");
+        }
         invoiceSummaryMap.put(userID, this.getInvoiceSummary(userRides));
     }
 
@@ -47,7 +52,18 @@ public class InvoiceGenerator {
      * @param userID
      * @return Invoice Summary
      */
-    public InvoiceSummary getUserInvoiceSummary(String userID) {
+    public InvoiceSummary getUserInvoiceSummary(String userID) throws CabInvoiceGeneratorException {
+        checkEmpty(invoiceSummaryMap);
+        if (!(invoiceSummaryMap.containsKey(userID))){
+            throw new CabInvoiceGeneratorException(CabInvoiceGeneratorException.ExceptionType.NO_SUCH_KEY,
+                                                    "No such user Id present");
+        }
         return invoiceSummaryMap.get(userID);
+    }
+
+    private void checkEmpty(Map checkMap) throws CabInvoiceGeneratorException {
+        if(checkMap == null || checkMap.size() == 0){
+            throw new CabInvoiceGeneratorException(CabInvoiceGeneratorException.ExceptionType.EMPTY_MAP,"No Invoice to display");
+        }
     }
 }
