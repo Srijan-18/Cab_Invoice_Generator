@@ -1,10 +1,11 @@
+import com.bridgelabz.exception.CabInvoiceGeneratorException;
 import com.bridgelabz.model.InvoiceSummary;
 import com.bridgelabz.model.Ride;
 import com.bridgelabz.service.InvoiceGenerator;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import utility.RideCategory;
+import com.bridgelabz.utility.RideCategory;
 
 public class CabInvoiceTest {
 
@@ -17,7 +18,6 @@ public class CabInvoiceTest {
 
     @Test
     public void givenDistanceAndTime_ShouldReturnTotalFare() {
-        InvoiceGenerator invoiceGenerator = new InvoiceGenerator();
         double distance = 2.0;
         int time = 1;
         Assert.assertEquals(21, invoiceGenerator.getTotalFare(new Ride(distance, time,
@@ -47,7 +47,7 @@ public class CabInvoiceTest {
     }
 
     @Test
-    public void givenUserId_ShouldReturnInvoiceOfGivenUserId() {
+    public void givenUserId_ShouldReturnInvoiceOfGivenUserId() throws CabInvoiceGeneratorException {
         Ride[] user1Rides = { new Ride(3.0, 2, RideCategory.NORMAL),
                               new Ride(0.1, 1, RideCategory.NORMAL)};
         invoiceGenerator.setUserSpecificInvoice("User1", user1Rides);
@@ -59,7 +59,7 @@ public class CabInvoiceTest {
     }
 
     @Test
-    public void givenRideCategory_SelectivelyPREMIUM_ShouldReturnFareAccordingly() {
+    public void givenRideCategory_SelectivelyPREMIUM_ShouldReturnFareAccordingly() throws CabInvoiceGeneratorException {
         Ride[] user1Rides = { new Ride(3.0, 2, RideCategory.NORMAL),
                               new Ride(0.1, 1, RideCategory.PREMIUM)};
         invoiceGenerator.setUserSpecificInvoice("User1", user1Rides);
@@ -68,5 +68,44 @@ public class CabInvoiceTest {
         invoiceGenerator.setUserSpecificInvoice("User2", user2Rides);
         Assert.assertEquals(new InvoiceSummary(2,52), invoiceGenerator
                                                                     .getUserInvoiceSummary("User1"));
+    }
+
+    @Test
+    public void givenUserId_WhenDuplicate_ShouldThrowException() {
+        try {
+            Ride[] user1Rides = {new Ride(3.0, 2, RideCategory.NORMAL),
+                    new Ride(0.1, 1, RideCategory.NORMAL)};
+            invoiceGenerator.setUserSpecificInvoice("User1", user1Rides);
+            Ride[] user2Rides = {new Ride(5.0, 2, RideCategory.NORMAL),
+                    new Ride(6.1, 3, RideCategory.NORMAL)};
+            invoiceGenerator.setUserSpecificInvoice("User1", user2Rides);
+        }catch(CabInvoiceGeneratorException e){
+            Assert.assertEquals("UserID already exists",e.getMessage());
+        }
+
+    }
+    @Test
+    public void givenUserId_WhenDoesntExists_ShouldThrowException() {
+        try {
+            Ride[] user1Rides = {new Ride(3.0, 2, RideCategory.NORMAL),
+                    new Ride(0.1, 1, RideCategory.NORMAL)};
+            invoiceGenerator.setUserSpecificInvoice("User1", user1Rides);
+            Ride[] user2Rides = {new Ride(5.0, 2, RideCategory.NORMAL),
+                    new Ride(6.1, 3, RideCategory.NORMAL)};
+            invoiceGenerator.setUserSpecificInvoice("User2", user2Rides);
+            invoiceGenerator.getUserInvoiceSummary("user3");
+        }catch(CabInvoiceGeneratorException e){
+            Assert.assertEquals(CabInvoiceGeneratorException.ExceptionType.NO_SUCH_KEY,e.e);
+        }
+
+    }
+    @Test
+    public void givenUserId_WhenNoDataPresent_ShouldThrowException()  {
+        try {
+            invoiceGenerator.getUserInvoiceSummary("user3");
+        }catch(CabInvoiceGeneratorException e){
+            Assert.assertEquals(CabInvoiceGeneratorException.ExceptionType.EMPTY_MAP,e.e);
+        }
+
     }
 }
