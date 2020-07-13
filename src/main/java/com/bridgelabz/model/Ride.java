@@ -1,12 +1,8 @@
 package com.bridgelabz.model;
 
+import utility.RideCategory;
+
 public class Ride {
-    /**
-     * ENUM to specify the ride category
-     */
-    public enum RideCategory {
-        PREMIUM,NORMAL;
-    }
 
     public RideCategory rideCategory;
     public int time;

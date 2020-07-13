@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class InvoiceGenerator {
 
-    Map<String, InvoiceSummary> invoiceSummaryMap;
+    private Map<String, InvoiceSummary> invoiceSummaryMap;
 
     public InvoiceGenerator() {
         this.invoiceSummaryMap = new HashMap<>();
